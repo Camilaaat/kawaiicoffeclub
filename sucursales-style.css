@@ -1,0 +1,58 @@
+
+h1 {
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+h4{
+    text-align: center;
+}
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #FFC0CB;
+}
+
+.map-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.map {
+    width: calc(50% - 10px); /* Ancho para dos columnas con espacio entre ellas */
+    margin-bottom: 20px;
+    margin-right: 10px; /* Espacio entre los mapas */
+}
+
+.map:last-child {
+    margin-right: 0; /* Elimina el margen derecho del último mapa para evitar espacios adicionales */
+}
+
+.map iframe {
+    width: 100%;
+    height: 300px;
+    border: 0;
+}
