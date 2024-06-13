@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kawaii coffee club</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="contacto-style.css">
+    <link rel="icon" href="img/iconkawaii.png">
 </head>
 <body>
     <header>
@@ -24,18 +26,55 @@
             </ul>
         </nav>
     </header>
-    
+    <h2>Formulario de Contacto - Kawaii Coffee Club 💌🌸</h2>
+    <h4>Por favor, completa el siguiente formulario y nos pondremos en contacto contigo lo antes posible.</h4>
     <section id="contacto">
-        <h1>Contacto</h1>
-        <form>
-            <label for="nombre">Nombre:</label>
+        <form action="#" method="POST">
+            <label for="nombre">Nombre Completo 📝:</label>
             <input type="text" id="nombre" name="nombre" required><br>
-            <label for="email">Email:</label>
+
+            <label for="email">Correo Electrónico 📧:</label>
             <input type="email" id="email" name="email" required><br>
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required><br>
-            <input type="submit" value="Registrarse">
+
+            <label for="telefono">Teléfono ☎️:</label>
+            <input type="tel" id="telefono" name="telefono" required><br>
+
+            <label>Asunto:</label><br>
+            <input type="checkbox" id="consulta" name="asunto" value="consulta" required>
+            <label for="consulta">Consulta sobre productos 🛍️</label><br>
+
+            <input type="checkbox" id="reserva" name="asunto" value="reserva" required>
+            <label for="reserva">Reserva de mesa 🍽️</label><br>
+
+            <input type="checkbox" id="sugerencia" name="asunto" value="sugerencia" required>
+            <label for="sugerencia">Sugerencia 🌟</label><br>
+
+            <input type="checkbox" id="otro" name="asunto" value="otro" required>
+            <label for="otro">Otro (especificar) 📋</label><br>
+
+            <label for="mensaje">Mensaje 📝:</label>
+            <textarea id="mensaje" name="mensaje" required></textarea><br>
+
+            <label>Preferencia de Contacto:</label><br>
+            <input type="radio" id="correo" name="preferencia" value="correo" required>
+            <label for="correo">Correo Electrónico ✉️</label><br>
+
+            <input type="radio" id="llamada" name="preferencia" value="llamada" required>
+            <label for="llamada">Teléfono ☎️</label><br>
+
+            <label>Acepto recibir noticias y promociones de Kawaii Coffee Club por correo electrónico.</label>
+            <input type="radio" id="acepto-promociones-si" name="acepto-promociones" value="si" required>
+            <label for="acepto-promociones-si">Sí</label>
+
+            <input type="radio" id="acepto-promociones-no" name="acepto-promociones" value="no" required>
+            <label for="acepto-promociones-no">No</label><br>
+
+            <button type="submit" class="submit-btn">Enviar ✉️</button>
         </form>
+        <div class="mensaje-aceptacion">
+            <p>*Al enviar este formulario, aceptas nuestra política de privacidad y términos de uso. Nos esforzamos por responder a todas las consultas dentro de un plazo de 24 horas hábiles.<br></p>
+            <h4>¡Gracias por contactarte con Kawaii Coffee Club!</h4>
+        </div>
     </section>
 
     <footer>

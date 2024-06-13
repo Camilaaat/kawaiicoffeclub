@@ -1,0 +1,27 @@
+h1, h2, h4 ,p {
+    text-align: center;
+    margin: 0 auto; /* Centra los encabezados */
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas con igual ancho */
+    gap: 10px; /* Espacio entre las imágenes */
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.grid-item {
+    overflow: hidden; /* Asegura que las imágenes no se salgan del contenedor */
+    border-radius: 5px;
+}
+
+.grid-item img {
+    width: 100%; /* Ajusta las imágenes al 100% del ancho del contenedor */
+    height: auto; /* Mantiene la proporción de la imagen */
+    display: block; /* Elimina espacios en blanco debajo de las imágenes */
+    border-radius: 5px; /* Borde redondeado */
+}
