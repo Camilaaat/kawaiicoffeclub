@@ -1,19 +1,100 @@
-¡Suscríbete al Newsletter de Kawaii Coffee Club! 💌🌸
-Mantente al Día con lo Mejor de Kawaii
-¡No te pierdas nuestras ofertas exclusivas, eventos especiales y premios increíbles!
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kawaii coffee club</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="newsletter-style.css">
+    <link rel="icon" href="img/iconkawaii.png">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html" class="logo">
+                <img src="img/iconkawaii.png" alt="logo-kawaii">
+            </div>
+            <input type="checkbox" id="menu-bar">
+            <label for="menu-bar" class="hamburger">&#9776;</label>
+            <ul class="nav-links">
+                <li><a href="acerca-de.html">Acerca de</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="sucursales.html">Sucursales</a></li>
+                <li><a href="clientes.html">Nuestros Clientes</a></li>
+            </ul>
+        </nav>
+    </header>
+<h1>¡Suscríbete al Newsletter de Kawaii Coffee Club! 💌🌸</h1>
+<h2>Mantente al Día con lo Mejor de Kawaii</h2>
+<h3>¡No te pierdas nuestras ofertas exclusivas, eventos especiales y premios increíbles!</h3><br>
+<h2>Beneficios de Suscribirse:</h2>
+<ul>
+    <li>Descuentos Especiales: Accede a descuentos exclusivos en nuestros productos más populares.</li><br>
+    <li>Invitaciones a Eventos: Sé el primero en enterarte de nuestros eventos especiales, desde noches de karaoke hasta sesiones de arte kawaii.</li><br>
+    <li>Participación en Concursos: Gana premios increíbles como tarjetas de regalo, kits de productos kawaii y más.</li><br>
+    <li>Novedades y Lanzamientos: Descubre antes que nadie nuestros nuevos productos y sabores del mes.</li><br>
+    <li>Recetas y Tips Kawaii: Aprende a preparar recetas kawaii en casa y tips para decorar tus propios postres.</li><br>
+</ul><br>
+<h2>¿Cómo Funciona?</h2>
+<ol>
+    <li>Regístrate: Completa nuestro formulario de suscripción rápido y fácil.</li><br>
+    <li>Confirma tu Correo: Revisa tu bandeja de entrada y confirma tu suscripción para empezar a recibir nuestras actualizaciones.</li><br>
+    <li>¡Disfruta los Beneficios! Recibe periódicamente nuestro newsletter lleno de sorpresas y alegrías.</li><br>
+</ol><br>
+<h2>¡Únete a la Comunidad Kawaii!</h2>
+<h4>Suscríbete ahora para no perder la oportunidad de disfrutar de lo mejor de Kawaii Coffee Club y ser parte de nuestra familia kawaii. ¡No esperes más para llenar tu vida de dulzura y diversión!</h4>
+<section id="registro">
+    <form action="#" method="POST">
+        <label for="nombre">Nombre Completo 📝:</label>
+        <input type="text" id="nombre" name="nombre" required><br>
 
-Beneficios de Suscribirse:
-Descuentos Especiales: Accede a descuentos exclusivos en nuestros productos más populares.
-Invitaciones a Eventos: Sé el primero en enterarte de nuestros eventos especiales, desde noches de karaoke hasta sesiones de arte kawaii.
-Participación en Concursos: Gana premios increíbles como tarjetas de regalo, kits de productos kawaii y más.
-Novedades y Lanzamientos: Descubre antes que nadie nuestros nuevos productos y sabores del mes.
-Recetas y Tips Kawaii: Aprende a preparar recetas kawaii en casa y tips para decorar tus propios postres.
-¿Cómo Funciona?
-Regístrate: Completa nuestro formulario de suscripción rápido y fácil.
-Confirma tu Correo: Revisa tu bandeja de entrada y confirma tu suscripción para empezar a recibir nuestras actualizaciones.
-¡Disfruta los Beneficios! Recibe periódicamente nuestro newsletter lleno de sorpresas y alegrías.
-¡Únete a la Comunidad Kawaii!
-Suscríbete ahora para no perder la oportunidad de disfrutar de lo mejor de Kawaii Coffee Club y ser parte de nuestra familia kawaii. ¡No esperes más para llenar tu vida de dulzura y diversión!
+        <label for="email">Correo Electrónico 📧:</label>
+        <input type="email" id="email" name="email" required><br>
 
-[Suscríbete Ahora] [Botón de Suscripción]
+        <label for="fecha">Fecha de Nacimiento 🎂 :</label>
+        <input type="date" id="fecha" name="fecha" required><br>
 
+        <label>Intereses:</label><br>
+        <input type="checkbox" id="descuento" name="intereses" value="descuento" required>
+        <label for="descuentos">Descuentos y Ofertas 💸</label><br>
+
+        <input type="checkbox" id="eventos" name="intereses" value="eventos" required>
+        <label for="eventos">Eventos Especiales 🎉</label><br>
+
+        <input type="checkbox" id="concursos" name="intereses" value="concursos" required>
+        <label for="concursos">Concursos y Premios 🎁</label><br>
+
+        <input type="checkbox" id="novedades" name="intereses" value="novedades" required>
+        <label for="novedades">Novedades y Lanzamientos 🆕</label><br>
+
+        <input type="checkbox" id="recetas" name="intereses" value="recetas" required>
+        <label for="recetas">Recetas y Tips Kawaii 🍰</label><br>
+
+        <label>Acepto recibir noticias y promociones de Kawaii Coffee Club por correo electrónico.</label>
+        <input type="radio" id="acepto-promociones-si" name="acepto-promociones" value="si" required>
+        <label for="acepto-promociones-si">Sí</label>
+
+        <input type="radio" id="acepto-promociones-no" name="acepto-promociones" value="no" required>
+        <label for="acepto-promociones-no">No</label><br>
+
+        <label>Acepto los términos y condiciones y la política de privacidad.</label>
+        <input type="radio" id="acepto-terminos-si" name="acepto-terminos" value="si" required>
+        <label for="acepto-terminos-si">Sí</label>
+
+        <button type="submit" class="submit-btn">¡Suscribirme! ✉️</button>
+    </form>
+    <div class="mensaje-aceptacion">
+        <p>*Al suscribirte, aceptas nuestra política de privacidad y términos de uso. Nos comprometemos a enviar solo contenido relevante y emocionante para nuestra comunidad kawaii. Puedes darte de baja en cualquier momento.<br></p>
+    </div>
+</section>
+    <footer>
+        <div class="social-media">
+            <a href="https://www.facebook.com/">Facebook</a>
+            <a href="https://www.instagram.com/">Instagram</a>
+        </div>
+        <p>&copy; 2024 Kawaii Coffee Club</p>
+    </footer>
+</body>
+</html>
