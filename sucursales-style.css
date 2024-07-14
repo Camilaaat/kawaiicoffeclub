@@ -42,17 +42,17 @@ th {
 }
 
 .map {
-    width: calc(50% - 10px); /* Ancho para dos columnas con espacio entre ellas */
+    width: calc(50% - 10px); 
     margin-bottom: 20px;
-    margin-right: 10px; /* Espacio entre los mapas */
-}
+    margin-right: 10px; 
 
 .map:last-child {
-    margin-right: 0; /* Elimina el margen derecho del último mapa para evitar espacios adicionales */
+    margin-right: 0; 
 }
 
 .map iframe {
     width: 100%;
     height: 300px;
     border: 0;
+}
 }
