@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', (event) => {
         event.preventDefault(); 
 
-        // Obtiene los valores de los campos
         const nombre = document.getElementById('nombre').value;
         const email = document.getElementById('email').value;
         const fecha = document.getElementById('fecha').value;
