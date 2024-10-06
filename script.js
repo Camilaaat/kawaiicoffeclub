@@ -20,7 +20,6 @@ addButton.addEventListener('click', addTask);
 function createTaskElement(task) {
     const listItem = document.createElement('li');
 
-    // Crear el checkbox
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.className = 'taskCheckbox';

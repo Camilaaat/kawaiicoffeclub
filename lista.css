@@ -10,24 +10,23 @@
 #taskInput {
     padding: 10px;
     width: 300px;
-    border: 2px solid #ff69b4; /* Borde rosa */
-    border-radius: 5px; /* Bordes redondeados */
+    border: 2px solid #ff69b4; 
+    border-radius: 5px; 
 }
 
 #addTask {
     padding: 10px 15px;
-    background-color: #ff69b4; /* Botón rosa */
-    color: white; /* Color del texto en el botón */
+    background-color: #ff69b4; 
+    color: white; 
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
 #addTask:hover {
-    background-color: #ff1493; /* Color más oscuro al pasar el mouse */
+    background-color: #ff1493; 
 }
 
-/* Estilos para la lista de tareas */
 #taskList {
     list-style: none;
     padding: 0;
@@ -35,17 +34,19 @@
 }
 
 #taskList li {
-    background-color: #fff; /* Color blanco para las tareas */
-    margin: 5px 0;
+    background-color: #fff; 
     padding: 10px;
-    border: 1px solid #ff69b4; /* Borde rosa */
-    border-radius: 5px; /* Bordes redondeados */
+    border: 1px solid #ff69b4; 
+}
+
+.completed {
+    text-decoration: line-through;
+    color: black; 
 }
 
 
-/* Estilos del pie de página */
 footer {
-    background-color: #ffcccb; /* Color de fondo del pie de página */
+    background-color: #ffcccb;
     text-align: center;
     padding: 10px 0;
     position: relative;
