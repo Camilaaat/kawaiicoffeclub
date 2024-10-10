@@ -1,13 +1,10 @@
-
 const express = require("express");
 const app = express();
 
 app.use(express.json());
 
-
-const peliculasRouter = require('./routers/peliculas.router');
-app.use('/peliculas', peliculasRouter);
-
+const tareasRouter = require('./routers/tareas.router');
+app.use('/tareas', tareasRouter);
 
 
 app.get("/", (req, res) => {
