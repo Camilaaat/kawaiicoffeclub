@@ -12,6 +12,8 @@ app.use('/clientes', clientesRouter);
 const asuntosRouter = require('./routers/asuntos.router');
 app.use('/asuntos', asuntosRouter);
 
+
+
 app.get("/", (req, res) => {
     res.send("Hola Kawaii Coffee Club");
 });
