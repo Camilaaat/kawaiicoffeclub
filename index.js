@@ -12,6 +12,8 @@ app.use('/clientes', clientesRouter);
 const asuntosRouter = require('./routers/asuntos.router');
 app.use('/asuntos', asuntosRouter);
 
+const usuariosRouter = require('./routers/usuarios.router');
+app.use('/usuarios', usuariosRouter);
 
 
 app.get("/", (req, res) => {
