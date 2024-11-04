@@ -54,6 +54,16 @@
         </div>
         <h2>¿Quieres aparecer aquí? 📷</h2> <br>
         <p>¡Envíanos una foto tuya disfrutando en Kawaii Coffee Club y podrías aparecer en nuestra galería de clientes felices!</p> <br>
+        <h2>Envía tu Foto 📷</h2>
+    <form id="envio-foto" action="tu_script_de_subida.php" method="POST" enctype="multipart/form-data">
+    <label for="nombre">Tu Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+
+    <label for="foto">Selecciona una foto:</label>
+    <input type="file" id="foto" name="foto" accept="image/*" required>
+
+    <button type="submit">Enviar Foto</button>
+</form>
         <h4>¡Gracias a todos nuestros clientes por hacer de Kawaii Coffee Club un lugar lleno de sonrisas y momentos especiales!</h4>
     </section>
 

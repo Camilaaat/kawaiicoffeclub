@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-10-2024 a las 03:12:04
+-- Tiempo de generación: 10-10-2024 a las 03:12:04
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -16,34 +16,30 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
--- --------------------------------------------------------
+--
 -- Base de datos: `kawaii_coffee_db`
+--
+
 -- --------------------------------------------------------
 
--- Estructura de tabla para la tabla `asuntos`
+--
+-- Estructura de tabla para la tabla `fotos_clientes`
+--
 
-CREATE TABLE `asuntos` (
-  `id_asunto` int(11) NOT NULL,
-  `descripcion_asunto` varchar(255) NOT NULL
+CREATE TABLE `fotos_clientes` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `nombre` VARCHAR(100) NOT NULL,
+    `ruta_imagen` VARCHAR(255) NOT NULL,
+    `fecha_subida` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcado de datos para la tabla `asuntos`
+-- 
+-- Volcado de datos para la tabla `fotos_clientes`
+--
 
-INSERT INTO `asuntos` (`id_asunto`, `descripcion_asunto`) VALUES
-(1, 'Consulta sobre productos'),
-(2, 'Reserva de mesa'),
-(3, 'Sugerencia'),
-(4, 'Otro');
-
--- Índices para la tabla `asuntos`
-
-ALTER TABLE `asuntos`
-  ADD PRIMARY KEY (`id_asunto`);
-
--- AUTO_INCREMENT para la tabla `asuntos`
-
-ALTER TABLE `asuntos`
-  MODIFY `id_asunto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+INSERT INTO `fotos_clientes` (`nombre`, `ruta_imagen`) VALUES ('Juan Pérez', '/uploads/juan_perez_foto.jpg');
+INSERT INTO `fotos_clientes` (`nombre`, `ruta_imagen`) VALUES ('María García', '/uploads/maria_garcia_foto.jpg');
+INSERT INTO `fotos_clientes` (`nombre`, `ruta_imagen`) VALUES ('Luis Martínez', '/uploads/luis_martinez_foto.jpg');
 
 COMMIT;
 
