@@ -6,11 +6,17 @@ app.use(express.json());
 const tareasRouter = require('./routers/tareas.router');
 app.use('/tareas', tareasRouter);
 
-const clientesRouter = require('./routers/clientes.router');
-app.use('/clientes', clientesRouter);
+const suscriptoresRouter = require('./routers/suscriptores.router');
+app.use('/suscriptores', suscriptoresRouter);
 
-const asuntosRouter = require('./routers/asuntos.router');
-app.use('/asuntos', asuntosRouter);
+const interesesRouter = require('./routers/intereses.router');
+app.use('/intereses', interesesRouter);
+
+const fotosClientesRouter = require('./routers/fotos_clientes.router');
+app.use('/fotos-clientes', fotosClientesRouter);
+
+const contactosRouter = require('./routers/contactos.router');
+app.use('/contactos', contactosRouter);
 
 const usuariosRouter = require('./routers/usuarios.router');
 app.use('/usuarios', usuariosRouter);
