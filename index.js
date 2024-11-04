@@ -12,8 +12,9 @@ app.use('/suscriptores', suscriptoresRouter);
 const interesesRouter = require('./routers/intereses.router');
 app.use('/intereses', interesesRouter);
 
-const fotosClientesRouter = require('./routers/fotos_clientes.router');
-app.use('/fotos-clientes', fotosClientesRouter);
+const fotosClientesRouter = require('./routers/fotosclientes.router');
+app.use('/fotosclientes', fotosClientesRouter);
+
 
 const contactosRouter = require('./routers/contactos.router');
 app.use('/contactos', contactosRouter);

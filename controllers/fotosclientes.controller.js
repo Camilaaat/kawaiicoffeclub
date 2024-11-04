@@ -3,7 +3,7 @@ const db = require("../db/db");
 //// MÉTODO GET  /////
 
 const allFotosClientes = (req, res) => {
-    const sql = "SELECT * FROM fotos_clientes";
+    const sql = "SELECT * FROM fotosclientes";
     db.query(sql, (error, rows) => {
         if (error) {
             return res.status(500).json({ error: "ERROR: Intente más tarde por favor" });
@@ -14,7 +14,7 @@ const allFotosClientes = (req, res) => {
 
 const showFotoCliente = (req, res) => {
     const { id } = req.params;
-    const sql = "SELECT * FROM fotos_clientes WHERE id = ?";
+    const sql = "SELECT * FROM fotosclientes WHERE id = ?";
     db.query(sql, [id], (error, rows) => {
         if (error) {
             return res.status(500).json({ error: "ERROR: Intente más tarde por favor" });
@@ -30,7 +30,7 @@ const showFotoCliente = (req, res) => {
 
 const storeFotoCliente = (req, res) => {
     const { nombre, ruta_imagen } = req.body; // Asegúrate de que estos datos se envían correctamente
-    const sql = "INSERT INTO fotos_clientes (nombre, ruta_imagen) VALUES (?, ?)";
+    const sql = "INSERT INTO fotosclientes (nombre, ruta_imagen) VALUES (?, ?)";
     db.query(sql, [nombre, ruta_imagen], (error, result) => {
         if (error) {
             return res.status(500).json({ error: "ERROR: Intente más tarde por favor" });
@@ -45,7 +45,7 @@ const storeFotoCliente = (req, res) => {
 const updateFotoCliente = (req, res) => {
     const { id } = req.params;
     const { nombre, ruta_imagen } = req.body; // Asegúrate de que estos datos se envían correctamente
-    const sql = "UPDATE fotos_clientes SET nombre = ?, ruta_imagen = ? WHERE id = ?";
+    const sql = "UPDATE fotosclientes SET nombre = ?, ruta_imagen = ? WHERE id = ?";
     db.query(sql, [nombre, ruta_imagen, id], (error, result) => {
         if (error) {
             return res.status(500).json({ error: "ERROR: Intente más tarde por favor" });
@@ -62,7 +62,7 @@ const updateFotoCliente = (req, res) => {
 
 const destroyFotoCliente = (req, res) => {
     const { id } = req.params;
-    const sql = "DELETE FROM fotos_clientes WHERE id = ?";
+    const sql = "DELETE FROM fotosclientes WHERE id = ?";
     db.query(sql, [id], (error, result) => {
         if (error) {
             return res.status(500).json({ error: "ERROR: Intente más tarde por favor" });
