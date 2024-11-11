@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
 const db = require("../db/db");
 
 //// MÉTODO GET  /////
@@ -30,9 +33,13 @@ const showUsuario = (req, res) => {
 
 
 const storeUsuario = (req, res) => {
+    let imagenAsubir = "";
+    if (req.file){
+        imagenAsubir = req.file.filename;
+    }
     const { nombre, email, contraseña } = req.body;
-    const sql = "INSERT INTO usuarios (nombre, email, contraseña) VALUES (?, ?, ?)";
-    db.query(sql, [nombre, email, contraseña], (error, result) => {
+    const sql = "INSERT INTO usuarios (nombre, email, contraseña, url_imagen) VALUES (?, ?, ?, ?)";
+    db.query(sql, [nombre, email, contraseña, imagenAsubir], (error, result) => {
         if (error) {
             return res.status(500).json({ error: "ERROR: Intente más tarde por favor" });
         }
