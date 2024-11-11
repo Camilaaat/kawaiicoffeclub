@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
 const db = require("../db/db");
 
 //// MÉTODO GET  /////
@@ -29,16 +32,26 @@ const showFotoCliente = (req, res) => {
 //// MÉTODO POST  /////
 
 const storeFotoCliente = (req, res) => {
-    const { nombre, ruta_imagen } = req.body; 
+    console.log('Body:', req.body); 
+    console.log('File:', req.file); 
+
+    let imagenAsubir = "";
+    if (req.file) {
+        // Genera la ruta completa con el nombre del archivo
+        imagenAsubir = "uploads/" + req.file.filename; // o la ruta que estés usando para guardar las imágenes
+    }
+
+    const { nombre } = req.body; 
     const sql = "INSERT INTO fotosclientes (nombre, ruta_imagen) VALUES (?, ?)";
-    db.query(sql, [nombre, ruta_imagen], (error, result) => {
+    db.query(sql, [nombre, imagenAsubir], (error, result) => {
         if (error) {
             return res.status(500).json({ error: "ERROR: Intente más tarde por favor" });
         }
-        const nuevaFotoCliente = { id: result.insertId, nombre, ruta_imagen }; 
+        const nuevaFotoCliente = { id: result.insertId, nombre, ruta_imagen: imagenAsubir }; 
         res.status(201).json(nuevaFotoCliente);
     });
 };
+
 
 //// MÉTODO PUT  /////
 
