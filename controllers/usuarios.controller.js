@@ -35,14 +35,14 @@ const showUsuario = (req, res) => {
 const storeUsuario = (req, res) => {
     console.log('Body:', req.body); 
     console.log('File:', req.file); 
-    
+
     let imagenAsubir = "";
     if (req.file){
         imagenAsubir = req.file.filename;
     }
-    const { nombre, email, contraseña } = req.body;
-    const sql = "INSERT INTO usuarios (nombre, email, contraseña, url_imagen) VALUES (?, ?, ?, ?)";
-    db.query(sql, [nombre, email, contraseña, imagenAsubir], (error, result) => {
+    const { nombre, email, contrasena } = req.body;
+    const sql = "INSERT INTO usuarios (nombre, email, contrasena, url_imagen) VALUES (?, ?, ?, ?)";
+    db.query(sql, [nombre, email, contrasena, imagenAsubir], (error, result) => {
         if (error) {
             return res.status(500).json({ error: "ERROR: Intente más tarde por favor" });
         }
@@ -55,9 +55,9 @@ const storeUsuario = (req, res) => {
 
 const updateUsuario = (req, res) => {
     const { id } = req.params;
-    const { nombre, email, contraseña } = req.body;
-    const sql = "UPDATE usuarios SET nombre = ?, email = ?, contraseña = ? WHERE id_usuario = ?";
-    db.query(sql, [nombre, email, contraseña, id], (error, result) => {
+    const { nombre, email, contrasena } = req.body;
+    const sql = "UPDATE usuarios SET nombre = ?, email = ?, contrasena = ? WHERE id_usuario = ?";
+    db.query(sql, [nombre, email, contrasena, id], (error, result) => {
         if (error) {
             return res.status(500).json({ error: "ERROR: Intente más tarde por favor" });
         }

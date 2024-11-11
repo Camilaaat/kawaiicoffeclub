@@ -29,7 +29,7 @@ const showFotoCliente = (req, res) => {
 //// MÉTODO POST  /////
 
 const storeFotoCliente = (req, res) => {
-    const { nombre, ruta_imagen } = req.body; // Asegúrate de que estos datos se envían correctamente
+    const { nombre, ruta_imagen } = req.body; 
     const sql = "INSERT INTO fotosclientes (nombre, ruta_imagen) VALUES (?, ?)";
     db.query(sql, [nombre, ruta_imagen], (error, result) => {
         if (error) {
@@ -44,7 +44,7 @@ const storeFotoCliente = (req, res) => {
 
 const updateFotoCliente = (req, res) => {
     const { id } = req.params;
-    const { nombre, ruta_imagen } = req.body; // Asegúrate de que estos datos se envían correctamente
+    const { nombre, ruta_imagen } = req.body; 
     const sql = "UPDATE fotosclientes SET nombre = ?, ruta_imagen = ? WHERE id = ?";
     db.query(sql, [nombre, ruta_imagen, id], (error, result) => {
         if (error) {
