@@ -41,14 +41,25 @@ const storeUsuario = (req, res) => {
         imagenAsubir = req.file.filename;
     }
     const { nombre, email, contrasena } = req.body;
-    const sql = "INSERT INTO usuarios (nombre, email, contrasena, url_imagen) VALUES (?, ?, ?, ?)";
-    db.query(sql, [nombre, email, contrasena, imagenAsubir], (error, result) => {
-        if (error) {
-            return res.status(500).json({ error: "ERROR: Intente más tarde por favor" });
+    if(!nombre || !email || !contrasena) {
+        return res.status(400).send("Los campos son obligatorios");
+    }
+
+    bcrypt.hash(contrasena,5,(err,hashedPassword)=>{
+        if (err){
+            return res.status(500).send("Error de incriptacion")
         }
-        const nuevoUsuario = { id_usuario: result.insertId, ...req.body }; 
-        res.status(201).json(nuevoUsuario);
-    });
+
+
+        const sql = "INSERT INTO usuarios (nombre, email, contrasena, url_imagen) VALUES (?, ?, ?, ?)";
+        db.query(sql, [nombre, email, hashedPassword, imagenAsubir], (error, result) => {
+            if (error) {
+                return res.status(500).json({ error: "ERROR: Intente más tarde por favor" });
+            }
+            const nuevoUsuario = { id_usuario: result.insertId, ...req.body }; 
+            res.status(201).json(nuevoUsuario);
+        });
+    })
 };
 
 //// MÉTODO PUT  /////
