@@ -33,6 +33,9 @@ const showUsuario = (req, res) => {
 
 
 const storeUsuario = (req, res) => {
+    console.log('Body:', req.body); 
+    console.log('File:', req.file); 
+    
     let imagenAsubir = "";
     if (req.file){
         imagenAsubir = req.file.filename;
