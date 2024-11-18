@@ -40,7 +40,7 @@ router.get('/:id', controller.showUsuario);
 router.post('/',uploads.single("url_imagen"), controller.storeUsuario);
 
 
-router.put('/:id', controller.updateUsuario);
+router.put('/:id',uploads.single("url_imagen"), controller.updateUsuario);
 
 
 router.delete('/:id', controller.destroyUsuario);

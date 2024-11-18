@@ -65,10 +65,17 @@ const storeUsuario = (req, res) => {
 //// MÉTODO PUT  /////
 
 const updateUsuario = (req, res) => {
+    let imagenAsubir = "";
+    if (req.file){
+        imagenAsubir = req.file.filename;
+    }
     const { id } = req.params;
     const { nombre, email, contrasena } = req.body;
-    const sql = "UPDATE usuarios SET nombre = ?, email = ?, contrasena = ? WHERE id_usuario = ?";
-    db.query(sql, [nombre, email, contrasena, id], (error, result) => {
+    console.log(id);
+    console.log(nombre);
+    
+    const sql = "UPDATE usuarios SET nombre = ?, email = ?, contrasena = ?, url_imagen = ? WHERE id_usuario = ?";
+    db.query(sql, [nombre, email, contrasena, imagenAsubir, id], (error, result) => {
         if (error) {
             return res.status(500).json({ error: "ERROR: Intente más tarde por favor" });
         }
