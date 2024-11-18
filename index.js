@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 
@@ -15,12 +17,14 @@ app.use('/intereses', interesesRouter);
 const fotosClientesRouter = require('./routers/fotosclientes.router');
 app.use('/fotosclientes', fotosClientesRouter);
 
-
 const contactosRouter = require('./routers/contactos.router');
 app.use('/contactos', contactosRouter);
 
 const usuariosRouter = require('./routers/usuarios.router');
 app.use('/usuarios', usuariosRouter);
+
+const authRouter = require('./routers/auth.router');
+app.use('/auth', authRouter);
 
 
 app.get("/", (req, res) => {
