@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kawaii coffee club</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="registro-login.css">
+    <link rel="icon" href="img/iconkawaii.png">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="img/iconkawaii.png" alt="logo-kawaii">
+                </a>
+            </div>
+            <input type="checkbox" id="menu-bar">
+            <label for="menu-bar" class="hamburger">&#9776;</label>
+            <ul class="nav-links">
+                <li><a href="acerca-de.html">Acerca de</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="sucursales.html">Sucursales</a></li>
+                <li><a href="clientes.html">Nuestros Clientes</a></li>
+                <li><a href="lista.html">Lista</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="form-container">
+        <!-- Formulario de Registro -->
+        <h2>Registrarse</h2>
+        <form id="register-form" action="/register" method="POST">
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <label for="url_imagen">Imagen de Perfil:</label>
+            <input type="file" id="url_imagen" name="url_imagen" accept="image/*">
+            
+            <button type="submit">Registrar</button>
+
+            ¿Ya estas registrado? Inicia sesion aqui
+
+        </form>
+    </div>
+
+    <footer>
+        <div class="social-media">
+            <a href="https://www.facebook.com/">Facebook</a>
+            <a href="https://www.instagram.com/">Instagram</a>
+        </div>
+        <p>&copy; 2024 Kawaii Coffee Club</p>
+    </footer>
+
+</body>

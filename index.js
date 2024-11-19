@@ -5,6 +5,7 @@ const app = express();
 
 app.use(express.json());
 
+//RUTAS TABLAS
 const tareasRouter = require('./routers/tareas.router');
 app.use('/tareas', tareasRouter);
 
@@ -26,10 +27,13 @@ app.use('/usuarios', usuariosRouter);
 const authRouter = require('./routers/auth.router');
 app.use('/auth', authRouter);
 
+//RUTAS LOGIN,REGISTER,ADMIN
+app.get("/", (req, res) => res.sendFile(__dirname + "/login.html"));
 
 app.get("/", (req, res) => {
     res.send("Hola Kawaii Coffee Club");
 });
+
 
 
 const PORT = 3000;
