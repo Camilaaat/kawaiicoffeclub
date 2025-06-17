@@ -416,86 +416,80 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // Formulario para agregar fotos
+// Cargar fotos de clientes y mostrarlas en la tabla
+function cargarFotos() {
+  fetch('http://localhost:3000/fotosclientes')
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.getElementById("fotosTableBody");
+      tbody.innerHTML = "";
+      data.forEach(foto => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${foto.id}</td>
+          <td>${foto.nombre}</td>
+          <td><img src="${foto.imagen_url}" alt="${foto.nombre}" style="max-width: 100px;"></td>
+          <td>${foto.fecha_subida ?? ''}</td>
+          <td>
+            <button class="edit-btn" data-id="${foto.id}">Editar</button>
+            <button class="delete-btn" data-id="${foto.id}">Eliminar</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    });
+}
+
+// Evento submit para agregar foto de cliente con FormData (envío archivo)
 const fotoForm = document.getElementById("fotoForm");
 
 fotoForm?.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const nombre = document.getElementById("nombreFoto").value.trim();
-  const imagen_url = document.getElementById("imagenUrl").value.trim();
-  const descripcion = document.getElementById("descripcionFoto").value.trim();
+  // Crear FormData a partir del formulario (incluye archivo y campos)
+  const formData = new FormData(fotoForm);
 
-  fetch('http://localhost:3000/fotosclientes', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nombre, imagen_url, descripcion })
+  fetch("http://localhost:3000/fotosclientes", {
+    method: "POST",
+    body: formData, // IMPORTANTE: no seteamos headers para que fetch lo maneje automáticamente
   })
-  .then(res => {
-    if (!res.ok) throw new Error('Error al guardar la foto');
-    return res.json();
-  })
-  .then(() => {
-    fotoForm.reset();
-    document.getElementById("fotoModal").style.display = "none";
-    cargarFotos();
-  })
-  .catch(err => alert(err.message));
-});
-
-// Función para cargar fotos
-function cargarFotos() {
-  fetch('http://localhost:3000/fotosclientes')
     .then(res => {
-      if (!res.ok) throw new Error('Error al cargar las fotos');
+      if (!res.ok) throw new Error("Error al guardar la foto");
       return res.json();
     })
-    .then(data => {
-      const grid = document.getElementById("fotosGrid");
-      grid.innerHTML = "";
-      data.forEach(foto => {
-        const card = document.createElement("div");
-        card.classList.add("foto-card");
-        card.innerHTML = `
-          <img src="${foto.imagen_url}" alt="${foto.nombre}">
-          <p>${foto.nombre}</p>
-          <button class="delete-btn" data-id="${foto.id}">Eliminar</button>
-        `;
-        grid.appendChild(card);
-      });
-      agregarEventoEliminarFotos();
+    .then(() => {
+      fotoForm.reset();
+      document.getElementById("fotoModal").style.display = "none";
+      cargarFotos();  // Recarga la tabla con las fotos actualizadas
     })
-    .catch(err => {
-      alert(err.message);
-    });
-}
+    .catch(err => alert(err.message));
+});
 
-// Función para agregar el evento a los botones eliminar
-function agregarEventoEliminarFotos() {
-  const botones = document.querySelectorAll(".delete-btn");
-  botones.forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      const id = e.target.dataset.id;
-      if (confirm("¿Querés eliminar esta foto?")) {
-        fetch(`http://localhost:3000/fotosclientes/${id}`, {
-          method: 'DELETE'
-        })
-        .then(res => {
-          if (!res.ok) throw new Error('Error al eliminar la foto');
-          return res.json();
-        })
-        .then(() => {
-          cargarFotos();
-        })
-        .catch(err => alert(err.message));
-      }
-    });
-  });
-}
+// Opcional: vista previa de la imagen antes de subir
+const inputImagen = document.getElementById("imagenFoto");
+const previewContainer = document.getElementById("previewContainer");
+const imagePreview = document.getElementById("imagePreview");
 
-// Ejecutar al cargar la página
+inputImagen.addEventListener("change", () => {
+  const file = inputImagen.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      imagePreview.src = e.target.result;
+      previewContainer.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  } else {
+    previewContainer.style.display = "none";
+    imagePreview.src = "/placeholder.svg";
+  }
+});
+
+// Cargar fotos al iniciar la página
 document.addEventListener("DOMContentLoaded", () => {
   cargarFotos();
 });
+
 
 document.addEventListener("DOMContentLoaded", () => {
   cargarSuscriptoresEnSelect();
