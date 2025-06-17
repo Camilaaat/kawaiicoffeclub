@@ -19,7 +19,7 @@ const res = await fetch("http://localhost:3000/api/register",{
 });
 if(!res.ok) return mensajeError.cassList.toggle("invisible_visible", false);
 const resJson = await res.json();
-if(resJason.redirect){
+if(resJson.redirect){
     window.location.href = resJson.redirect;
 }
 })

@@ -20,5 +20,6 @@ module.exports = (req, res, next) => {
                 .send({auth: false, message: "Failed to authenticate token."});
         
         req.userId = decoded.id;
+        next(); 
     });
 };

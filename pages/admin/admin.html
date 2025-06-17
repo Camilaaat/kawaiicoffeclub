@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kawaii coffee club Administracion</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Panel de Administración - Kawaii Coffee Club</title>
+    <link rel="stylesheet" href="admin.css">
     <link rel="icon" href="img/iconkawaii.png">
-    <script src="admin.js" defer></script>
 </head>
 <body>
     <header>
@@ -25,17 +24,270 @@
                 <li><a href="sucursales.html">Sucursales</a></li>
                 <li><a href="clientes.html">Nuestros Clientes</a></li>
                 <li><a href="lista.html">Lista</a></li>
-                <li><a href="registro_login.html">Login</a></li>
+                <li><a href="#" id="logoutBtn">Cerrar Sesión</a></li>
             </ul>
         </nav>
     </header>
 
-    <div class="form-container">
-        <!-- Formulario de Login admin-->
-        <h1>Bienvenido al sistema!</h1>
-        <h3>Perfil Administrador</h3>
-            <button type="submit">Cerrar Sesión</button>
+    <div class="admin-container">
+        <h1>Panel de Administración</h1>
+        <h3 id="welcomeMessage">Bienvenido, Administrador</h3>
+        
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="tareas">Tareas</button>
+            <button class="tab-btn" data-tab="suscriptores">Suscriptores</button>
+            <button class="tab-btn" data-tab="intereses">Intereses</button>
+            <button class="tab-btn" data-tab="contactos">Contactos</button>
+            <button class="tab-btn" data-tab="fotos">Fotos de Clientes</button>
+        </div>
+        
+        <div class="tab-content active" id="tareas">
+            <h2>Gestión de Tareas</h2>
+            <button class="add-btn" id="addTareaBtn">Agregar Tarea</button>
+            
+            <div class="form-modal" id="tareaModal">
+                <div class="modal-content">
+                    <span class="close-btn">&times;</span>
+                    <h3 id="tareaModalTitle">Agregar Tarea</h3>
+                    <form id="tareaForm">
+                        <input type="hidden" id="tareaId">
+                        <div class="form-group">
+                            <label for="tarea">Tarea:</label>
+                            <input type="text" id="tarea" name="tarea" required>
+                        </div>
+                        <div id="tareaMessage" class="message"></div>
+                        <button type="submit">Guardar</button>
+                    </form>
+                </div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tarea</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tareasTableBody">
+                    <!-- Aquí se cargarán las tareas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="tab-content" id="suscriptores">
+            <h2>Gestión de Suscriptores</h2>
+            <button class="add-btn" id="addSuscriptorBtn">Agregar Suscriptor</button>
+            
+            <div class="form-modal" id="suscriptorModal">
+                <div class="modal-content">
+                    <span class="close-btn">&times;</span>
+                    <h3 id="suscriptorModalTitle">Agregar Suscriptor</h3>
+                    <form id="suscriptorForm">
+                        <input type="hidden" id="suscriptorId">
+                        <div class="form-group">
+                            <label for="nombreSuscriptor">Nombre:</label>
+                            <input type="text" id="nombreSuscriptor" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailSuscriptor">Email:</label>
+                            <input type="email" id="emailSuscriptor" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                            <input type="date" id="fechaNacimiento" name="fecha_nacimiento" required>
+                        </div>
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="aceptoPromociones" name="acepto_promociones">
+                            <label for="aceptoPromociones">Acepta Promociones</label>
+                        </div>
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="aceptoTerminos" name="acepto_terminos" checked required>
+                            <label for="aceptoTerminos">Acepta Términos y Condiciones</label>
+                        </div>
+                        <div id="suscriptorMessage" class="message"></div>
+                        <button type="submit">Guardar</button>
+                    </form>
+                </div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Acepta Promociones</th>
+                        <th>Fecha de Suscripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="suscriptoresTableBody">
+                    <!-- Aquí se cargarán los suscriptores dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        
+<div class="tab-content" id="intereses">
+  <h2>Gestión de Intereses</h2>
+  <button class="add-btn" id="addInteresBtn">Agregar Interés</button>
+
+  <div class="form-modal" id="interesModal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <h3 id="interesModalTitle">Agregar Interés</h3>
+      <form id="interesForm">
+        <input type="hidden" id="interesId">
+        
+        <div class="form-group">
+          <label for="suscriptorIdInteres">Suscriptor:</label>
+          <select id="suscriptorIdInteres" name="suscriptor_id" required>
+            <!-- Opciones generadas dinámicamente desde JS -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="interes">Interés:</label>
+          <input type="text" id="interes" name="interes" required>
+        </div>
+        
+        <div id="interesMessage" class="message"></div>
+        <button type="submit">Guardar</button>
+      </form>
     </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Suscriptor</th>
+        <th>Interés</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="interesesTableBody">
+      <!-- Aquí se cargarán los intereses dinámicamente -->
+    </tbody>
+  </table>
+</div>
+
+        <div class="tab-content" id="contactos">
+            <h2>Gestión de Contactos</h2>
+            <button class="add-btn" id="addContactoBtn">Agregar Contacto</button>
+            
+            <div class="form-modal" id="contactoModal">
+                <div class="modal-content">
+                    <span class="close-btn">&times;</span>
+                    <h3 id="contactoModalTitle">Agregar Contacto</h3>
+                    <form id="contactoForm">
+                        <input type="hidden" id="contactoId">
+                        <div class="form-group">
+                            <label for="nombreContacto">Nombre:</label>
+                            <input type="text" id="nombreContacto" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailContacto">Email:</label>
+                            <input type="email" id="emailContacto" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefonoContacto">Teléfono:</label>
+                            <input type="tel" id="telefonoContacto" name="telefono" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="asuntoContacto">Asunto:</label>
+                            <select id="asuntoContacto" name="asunto" required>
+                                <option value="consulta">Consulta</option>
+                                <option value="reserva">Reserva</option>
+                                <option value="sugerencia">Sugerencia</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="mensajeContacto">Mensaje:</label>
+                            <textarea id="mensajeContacto" name="mensaje" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="preferenciaContacto">Preferencia de Contacto:</label>
+                            <select id="preferenciaContacto" name="preferencia_contacto" required>
+                                <option value="correo">Correo</option>
+                                <option value="llamada">Llamada</option>
+                            </select>
+                        </div>
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="aceptoPromocionesContacto" name="acepto_promociones">
+                            <label for="aceptoPromocionesContacto">Acepta Promociones</label>
+                        </div>
+                        <div id="contactoMessage" class="message"></div>
+                        <button type="submit">Guardar</button>
+                    </form>
+                </div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Asunto</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="contactosTableBody">
+                    <!-- Aquí se cargarán los contactos dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="tab-content" id="fotos">
+            <h2>Gestión de Fotos de Clientes</h2>
+            <button class="add-btn" id="addFotoBtn">Agregar Foto</button>
+            
+            <div class="form-modal" id="fotoModal">
+                <div class="modal-content">
+                    <span class="close-btn">&times;</span>
+                    <h3 id="fotoModalTitle">Agregar Foto de Cliente</h3>
+                    <form id="fotoForm" enctype="multipart/form-data">
+                        <input type="hidden" id="fotoId">
+                        <div class="form-group">
+                            <label for="nombreFoto">Nombre del Cliente:</label>
+                            <input type="text" id="nombreFoto" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="imagenFoto">Imagen:</label>
+                           <input type="file" id="imagenFoto" name="ruta_imagen" accept="image/*">
+                            <div id="previewContainer" class="preview-container" style="display: none;">
+                                <img id="imagePreview" src="/placeholder.svg" alt="Vista previa">
+                            </div>
+                        </div>
+                        <div id="fotoMessage" class="message"></div>
+                        <button type="submit">Guardar</button>
+                    </form>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Imagen</th>
+                        <th>Fecha de Subida</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="fotosTableBody">
+                </tbody>
+            </table>
+            <div class="fotos-grid" id="fotosGrid">
+                <!-- Aquí se cargarán las fotos dinámicamente -->
+            </div>
+        </div>
+    </div>
+    
 
     <footer>
         <div class="social-media">
@@ -44,6 +296,7 @@
         </div>
         <p>&copy; 2024 Kawaii Coffee Club</p>
     </footer>
+
+    <script src="admin.js"></script>
 </body>
 </html>
-

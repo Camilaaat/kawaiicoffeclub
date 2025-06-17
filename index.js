@@ -1,11 +1,18 @@
+// CONFIGURAR LO QUE SERIA UN SERVIDOR CON LAS MINIMAS PRESTACIONES PARA CORRER EXPRESS
+// Que este escuchando y tengamos una ruta principal "/" en el proyecto
+
 require("dotenv").config();
 
+const cors = require("cors");
 const express = require("express");
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
-//RUTAS TABLAS
+// en el cuerpo de la petición viene un json, lo voy a transformar en un objeto JS y de esta manera
+// lo voy a poder utilizar
+
 const tareasRouter = require('./routers/tareas.router');
 app.use('/tareas', tareasRouter);
 
@@ -27,14 +34,10 @@ app.use('/usuarios', usuariosRouter);
 const authRouter = require('./routers/auth.router');
 app.use('/auth', authRouter);
 
-//RUTAS LOGIN,REGISTER,ADMIN
-app.get("/", (req, res) => res.sendFile(__dirname + "/login.html"));
-
+// Esta es la ruta principal del proyecto "/"
 app.get("/", (req, res) => {
     res.send("Hola Kawaii Coffee Club");
 });
 
-
-
-const PORT = 3000;
-app.listen(PORT, ()=> console.log(`http://localhost:${PORT}`));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`http://localhost:${PORT}`));

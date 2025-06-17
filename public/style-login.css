@@ -1,0 +1,142 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #fdf0e5;
+    color: #333;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #ff69b4;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo img {
+    height: 50px;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.nav-links li {
+    margin: 0 15px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #fff0f5;
+}
+
+.hamburger {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: white;
+}
+
+#menu-bar {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: #ff69b4;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .nav-links li {
+        padding: 10px 0;
+    }
+
+    #menu-bar:checked + .hamburger + .nav-links {
+        display: flex;
+    }
+
+    .hamburger {
+        display: block;
+    }
+}
+
+.form-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ff69b4;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    text-align: left;
+    font-weight: bold;
+}
+
+input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #ff69b4;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #ff1493;
+}
+
+footer {
+    margin-top: 50px;
+    background-color: #ff69b4;
+    color: white;
+    padding: 10px 0;
+}
+
+.social-media a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.social-media a:hover {
+    text-decoration: underline;
+}
