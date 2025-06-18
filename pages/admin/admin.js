@@ -57,13 +57,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- CERRAR SESIÓN ---
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("token");
-      window.location.href = "index.html";
-    });
-  }
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("token"); // borra el token
+    window.location.href = "/login.html"; // redirige bien al login
+  });
+}
+
 
   // --- FORMULARIOS ---
 
