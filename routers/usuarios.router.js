@@ -1,48 +1,58 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const controller = require('../controllers/usuarios.controller');
+const usuarioController = require("../controllers/usuarios.controller");
 
 const multer = require("multer");
 const path = require("path");
 
 const storage = multer.diskStorage({
-    destination:(req, file, cb) => {
-        cb(null, 'img_usuarios');
-    },
-    filename: (req, file, cb) =>{
-        cb(null, Date.now() + path.extname(file.originalname));
-    },
+  destination: (req, file, cb) => {
+    cb(null, 'img_usuarios');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
 });
 
-const uploads = multer ({
-    storage,
-    fileFilter: (req, file, cb)=>{
-        console.log(file);
-        const filetypes = /jpg|jpeg|png|webp/;
-        const mimetype = filetypes.test(file.mimetype);
-        const extname = filetypes.test(
-            path.extname(file.originalname).toLowerCase()
-        );
-        if (mimetype && path.extname){
-            return cb(null, true);
-        };
-        cb("Tipo de archivo no soportado");
-    },
-    limits: {fileSize: 1024 * 1024 * 1},
+const uploads = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    console.log(file);
+    const filetypes = /jpg|jpeg|png|webp/;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    if (mimetype && extname) {
+      return cb(null, true);
+    }
+    return cb(new Error("Tipo de archivo no soportado"));
+  },
+  limits: { fileSize: 1024 * 1024 * 1 }, // 1MB
 });
 
-router.get('/', controller.allUsuarios);
+router.get('/', usuarioController.allUsuarios);
+router.get('/:id', usuarioController.showUsuario);
 
+// POST con manejo de error multer
+router.post('/', (req, res, next) => {
+  uploads.single("url_imagen")(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
+    next();
+  });
+}, usuarioController.storeUsuario);
 
-router.get('/:id', controller.showUsuario);
+router.put('/:id', (req, res, next) => {
+  uploads.single("url_imagen")(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
+    next();
+  });
+}, usuarioController.updateUsuario);
 
+router.delete('/:id', usuarioController.destroyUsuario);
 
-router.post('/',uploads.single("url_imagen"), controller.storeUsuario);
-
-
-router.put('/:id',uploads.single("url_imagen"), controller.updateUsuario);
-
-
-router.delete('/:id', controller.destroyUsuario);
+router.post("/login", usuarioController.loginUsuario);
 
 module.exports = router;

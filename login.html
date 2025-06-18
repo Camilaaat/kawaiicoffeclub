@@ -55,4 +55,29 @@
         <p>&copy; 2024 Kawaii Coffee Club</p>
     </footer>
 
+
+       <script>
+  document.getElementById("loginForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("emailLogin").value;
+    const contrasena = document.getElementById("passwordLogin").value;
+
+    fetch("http://localhost:3000/usuarios/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, contrasena })
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Credenciales inválidas");
+        return res.json();
+      })
+      .then(data => {
+        localStorage.setItem("token", data.token); // Guardamos el token
+        alert("Bienvenido, " + data.nombre);
+        window.location.href = "pages/admin.html"; // Redirigimos al admin
+      })
+      .catch(err => alert(err.message));
+  });
+</script>
 </body>
