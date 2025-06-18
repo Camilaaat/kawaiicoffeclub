@@ -38,8 +38,9 @@ router.get('/:id', controller.showFotoCliente);
 
 router.post('/',uploads.single("ruta_imagen"), controller.storeFotoCliente);
 
+router.put('/:id', uploads.single("ruta_imagen"), controller.updateFotoCliente);
 
-router.put('/:id', controller.updateFotoCliente);
+
 
 
 router.delete('/:id', controller.destroyFotoCliente);

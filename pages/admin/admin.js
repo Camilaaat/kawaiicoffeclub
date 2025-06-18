@@ -569,8 +569,11 @@ contactoForm?.addEventListener("submit", (e) => {
 
   const nombre = document.getElementById("nombreContacto").value.trim();
   const email = document.getElementById("emailContacto").value.trim();
+  const telefono = document.getElementById("telefonoContacto").value.trim();
   const asunto = document.getElementById("asuntoContacto").value.trim();
   const mensaje = document.getElementById("mensajeContacto").value.trim();
+  const preferencia_contacto = document.getElementById("preferenciaContacto").value;
+  const acepto_promociones = document.getElementById("aceptoPromocionesContacto").checked;
 
   const url = contactoEditandoId
     ? `http://localhost:3000/contactos/${contactoEditandoId}`
@@ -581,7 +584,15 @@ contactoForm?.addEventListener("submit", (e) => {
   fetch(url, {
     method,
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nombre, email, asunto, mensaje })
+    body: JSON.stringify({ 
+      nombre, 
+      email, 
+      telefono,
+      asunto, 
+      mensaje, 
+      preferencia_contacto, 
+      acepto_promociones 
+    })
   })
     .then(res => {
       if (!res.ok) throw new Error("Error al guardar el contacto");
@@ -610,8 +621,8 @@ function cargarContactos() {
           <td>${contacto.id}</td>
           <td>${contacto.nombre}</td>
           <td>${contacto.email}</td>
+          <td>${contacto.telefono || ""}</td>
           <td>${contacto.asunto || ""}</td>
-          <td>${contacto.mensaje}</td>
           <td>${contacto.fecha_contacto || ""}</td>
           <td>
             <button class="edit-btn" data-id="${contacto.id}">Editar</button>
@@ -630,8 +641,11 @@ function cargarContactos() {
             .then(c => {
               document.getElementById("nombreContacto").value = c.nombre;
               document.getElementById("emailContacto").value = c.email;
-              document.getElementById("asuntoContacto").value = c.asunto || "";
+              document.getElementById("telefonoContacto").value = c.telefono || "";
+              document.getElementById("asuntoContacto").value = c.asunto || "consulta";
               document.getElementById("mensajeContacto").value = c.mensaje;
+              document.getElementById("preferenciaContacto").value = c.preferencia_contacto || "correo";
+              document.getElementById("aceptoPromocionesContacto").checked = c.acepto_promociones;
 
               contactoEditandoId = c.id;
               contactoModal.style.display = "block";
@@ -668,19 +682,99 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Formulario para agregar fotos
 // Cargar fotos de clientes y mostrarlas en la tabla
+let fotoEditandoId = null;
+
+const fotoForm = document.getElementById("fotoForm");
+const fotoModal = document.getElementById("fotoModal");
+const btnAddFoto = document.getElementById("addFotoBtn");
+
+// Abrir modal para agregar nueva foto
+btnAddFoto?.addEventListener("click", () => {
+  fotoForm.reset();
+  fotoEditandoId = null;
+  document.getElementById("previewContainer").style.display = "none";
+  document.getElementById("imagePreview").src = "/placeholder.svg";
+  fotoModal.style.display = "block";
+});
+
+// Cerrar modal
+fotoModal.querySelector(".close-btn")?.addEventListener("click", () => {
+  fotoModal.style.display = "none";
+});
+
+// Mostrar vista previa de la imagen seleccionada
+document.getElementById("imagenFoto")?.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const preview = document.getElementById("imagePreview");
+      preview.src = event.target.result;
+      document.getElementById("previewContainer").style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Guardar foto (crear o editar)
+fotoForm?.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const nombre = document.getElementById("nombreFoto").value.trim();
+  const imagenInput = document.getElementById("imagenFoto");
+  const file = imagenInput.files[0];
+
+  if (!nombre || (!file && !fotoEditandoId)) {
+    alert("Completá todos los campos.");
+    return;
+  }
+
+  // Crear FormData para enviar con imagen
+  const formData = new FormData();
+  formData.append("nombre", nombre);
+  if (file) {
+    formData.append("ruta_imagen", file);
+  }
+
+  // Definir URL y método según si es edición o creación
+  const url = fotoEditandoId
+    ? `http://localhost:3000/fotosclientes/${fotoEditandoId}`
+    : "http://localhost:3000/fotosclientes";
+  const method = fotoEditandoId ? "PUT" : "POST";
+
+  fetch(url, {
+    method,
+    body: formData
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Error al guardar la foto");
+      return res.json();
+    })
+    .then(() => {
+      fotoForm.reset();
+      fotoModal.style.display = "none";
+      document.getElementById("previewContainer").style.display = "none";
+      fotoEditandoId = null;
+      cargarFotos();
+    })
+    .catch((err) => alert(err.message));
+});
+
+// Cargar fotos y mostrar en tabla
 function cargarFotos() {
-  fetch('http://localhost:3000/fotosclientes')
-    .then(res => res.json())
-    .then(data => {
+  fetch("http://localhost:3000/fotosclientes")
+    .then((res) => res.json())
+    .then((data) => {
       const tbody = document.getElementById("fotosTableBody");
       tbody.innerHTML = "";
-      data.forEach(foto => {
+
+      data.forEach((foto) => {
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${foto.id}</td>
           <td>${foto.nombre}</td>
           <td><img src="${foto.imagen_url}" alt="${foto.nombre}" style="max-width: 100px;"></td>
-          <td>${foto.fecha_subida ?? ''}</td>
+          <td>${foto.fecha_subida || ""}</td>
           <td>
             <button class="edit-btn" data-id="${foto.id}">Editar</button>
             <button class="delete-btn" data-id="${foto.id}">Eliminar</button>
@@ -688,58 +782,48 @@ function cargarFotos() {
         `;
         tbody.appendChild(row);
       });
+
+      // Agregar evento a botones Editar
+      document.querySelectorAll(".edit-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.id;
+          fetch(`http://localhost:3000/fotosclientes/${id}`)
+            .then((res) => res.json())
+            .then((f) => {
+              document.getElementById("nombreFoto").value = f.nombre;
+              document.getElementById("previewContainer").style.display = "block";
+              document.getElementById("imagePreview").src = f.imagen_url;
+              fotoEditandoId = f.id;
+              fotoModal.style.display = "block";
+            });
+        });
+      });
+
+      // Agregar evento a botones Eliminar
+      document.querySelectorAll(".delete-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.id;
+          if (confirm("¿Seguro que querés eliminar esta foto?")) {
+            fetch(`http://localhost:3000/fotosclientes/${id}`, {
+              method: "DELETE"
+            })
+              .then((res) => {
+                if (!res.ok) throw new Error("Error al eliminar");
+                cargarFotos();
+              })
+              .catch((err) => alert(err.message));
+          }
+        });
+      });
     });
 }
-
-// Evento submit para agregar foto de cliente con FormData (envío archivo)
-const fotoForm = document.getElementById("fotoForm");
-
-fotoForm?.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  // Crear FormData a partir del formulario (incluye archivo y campos)
-  const formData = new FormData(fotoForm);
-
-  fetch("http://localhost:3000/fotosclientes", {
-    method: "POST",
-    body: formData, // IMPORTANTE: no seteamos headers para que fetch lo maneje automáticamente
-  })
-    .then(res => {
-      if (!res.ok) throw new Error("Error al guardar la foto");
-      return res.json();
-    })
-    .then(() => {
-      fotoForm.reset();
-      document.getElementById("fotoModal").style.display = "none";
-      cargarFotos();  // Recarga la tabla con las fotos actualizadas
-    })
-    .catch(err => alert(err.message));
-});
-
-// Opcional: vista previa de la imagen antes de subir
-const inputImagen = document.getElementById("imagenFoto");
-const previewContainer = document.getElementById("previewContainer");
-const imagePreview = document.getElementById("imagePreview");
-
-inputImagen.addEventListener("change", () => {
-  const file = inputImagen.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      imagePreview.src = e.target.result;
-      previewContainer.style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  } else {
-    previewContainer.style.display = "none";
-    imagePreview.src = "/placeholder.svg";
-  }
-});
 
 // Cargar fotos al iniciar la página
 document.addEventListener("DOMContentLoaded", () => {
   cargarFotos();
 });
+
+
 
 
 document.addEventListener("DOMContentLoaded", () => {

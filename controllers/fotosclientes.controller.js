@@ -38,7 +38,7 @@ const storeFotoCliente = (req, res) => {
     let imagenAsubir = "";
     if (req.file) {
         // Genera la ruta completa con el nombre del archivo
-        imagenAsubir = "uploads/" + req.file.filename; // o la ruta que estés usando para guardar las imágenes
+        imagenAsubir = "/img_clientes/" + req.file.filename; // o la ruta que estés usando para guardar las imágenes
     }
 
     const { nombre } = req.body; 
@@ -57,7 +57,14 @@ const storeFotoCliente = (req, res) => {
 
 const updateFotoCliente = (req, res) => {
     const { id } = req.params;
-    const { nombre, ruta_imagen } = req.body; 
+    const { nombre } = req.body;
+
+    let ruta_imagen = req.body.ruta_imagen; // puede venir vacía o nula
+
+    if (req.file) {
+        ruta_imagen = "/img_clientes/" + req.file.filename;
+    }
+
     const sql = "UPDATE fotosclientes SET nombre = ?, ruta_imagen = ? WHERE id = ?";
     db.query(sql, [nombre, ruta_imagen, id], (error, result) => {
         if (error) {
@@ -66,10 +73,10 @@ const updateFotoCliente = (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).send({ error: "ERROR: La foto a modificar no existe" });
         }
-        const fotoClienteActualizada = { id, nombre, ruta_imagen }; 
-        res.json(fotoClienteActualizada);
+        res.json({ id, nombre, ruta_imagen });
     });
 };
+
 
 //// MÉTODO DELETE  /////
 
