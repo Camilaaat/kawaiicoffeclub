@@ -68,12 +68,30 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- FORMULARIOS ---
 
 // Formulario TAREAS
-const tareaForm = document.getElementById("tareaForm");
-let tareaEditandoId = null; // para saber si estamos editando
+let tareaEditandoId = null; // id de tarea que estamos editando, null si es nueva
 
+const tareaForm = document.getElementById("tareaForm");
+const tareaModal = document.getElementById("tareaModal");
+const btnAddTarea = document.getElementById("addTareaBtn"); // botón para abrir modal agregar tarea
+
+// Abrir modal para agregar tarea nueva
+btnAddTarea?.addEventListener("click", () => {
+  tareaForm.reset();
+  tareaEditandoId = null;
+  tareaModal.style.display = "block";
+});
+
+// Cerrar modal al hacer click en la "x"
+tareaModal.querySelector(".close-btn").addEventListener("click", () => {
+  tareaModal.style.display = "none";
+});
+
+// Submit para crear o editar tarea
 tareaForm?.addEventListener("submit", (e) => {
   e.preventDefault();
-  const tarea = document.getElementById("tarea").value;
+  const tarea = document.getElementById("tarea").value.trim();
+
+  if (!tarea) return alert("La tarea no puede estar vacía");
 
   let url = 'http://localhost:3000/tareas';
   let method = 'POST';
@@ -94,12 +112,13 @@ tareaForm?.addEventListener("submit", (e) => {
   .then(() => {
     tareaForm.reset();
     tareaEditandoId = null;
-    document.getElementById("tareaModal").style.display = "none";
+    tareaModal.style.display = "none";
     cargarTareas();
   })
   .catch(err => alert(err.message));
 });
 
+// Cargar tareas y mostrar en la tabla
 function cargarTareas() {
   fetch('http://localhost:3000/tareas')
     .then(res => res.json())
@@ -119,36 +138,40 @@ function cargarTareas() {
         tbody.appendChild(row);
       });
 
-      // Botones Editar
+      // Agregar evento a botones Editar
       document.querySelectorAll(".edit-btn").forEach(btn => {
-        btn.onclick = (e) => {
+        btn.addEventListener("click", (e) => {
           const id = e.target.dataset.id;
           const tareaTexto = e.target.dataset.tarea;
+
           document.getElementById("tarea").value = tareaTexto;
           tareaEditandoId = id;
-          document.getElementById("tareaModal").style.display = "block";
-        };
+          tareaModal.style.display = "block";
+        });
       });
 
-      // Botones Eliminar
+      // Agregar evento a botones Eliminar
       document.querySelectorAll(".delete-btn").forEach(btn => {
-        btn.onclick = (e) => {
+        btn.addEventListener("click", (e) => {
           const id = e.target.dataset.id;
-          if (confirm("¿Querés eliminar esta tarea?")) {
+          if (confirm("¿Seguro querés eliminar esta tarea?")) {
             fetch(`http://localhost:3000/tareas/${id}`, { method: 'DELETE' })
               .then(res => {
-                if (!res.ok) throw new Error('Error al eliminar la tarea');
+                if (!res.ok) throw new Error("Error al eliminar la tarea");
                 cargarTareas();
               })
               .catch(err => alert(err.message));
           }
-        };
+        });
       });
     });
 }
 
-// Cargar tareas al iniciar
-document.addEventListener("DOMContentLoaded", cargarTareas);
+// Cargar tareas apenas carga la página
+document.addEventListener("DOMContentLoaded", () => {
+  cargarTareas();
+});
+
 
 
   // Formulario Intereses
