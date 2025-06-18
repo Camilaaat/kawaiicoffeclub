@@ -304,9 +304,25 @@ function cargarTareas() {
 
 //FORMULARIO SUSCRIPTORES
 // Formulario Suscriptores
-const suscriptorForm = document.getElementById("suscriptorForm");
 let suscriptorEditandoId = null;
 
+const suscriptorForm = document.getElementById("suscriptorForm");
+const suscriptorModal = document.getElementById("suscriptorModal");
+const btnAddSuscriptor = document.getElementById("addSuscriptorBtn");
+
+// Abrir modal para agregar nuevo suscriptor
+btnAddSuscriptor?.addEventListener("click", () => {
+  suscriptorForm.reset();
+  suscriptorEditandoId = null;
+  suscriptorModal.style.display = "block";
+});
+
+// Cerrar modal al hacer click en la "x"
+suscriptorModal.querySelector(".close-btn")?.addEventListener("click", () => {
+  suscriptorModal.style.display = "none";
+});
+
+// Enviar formulario (crear o editar)
 suscriptorForm?.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -316,87 +332,99 @@ suscriptorForm?.addEventListener("submit", (e) => {
   const acepto_promociones = document.getElementById("aceptoPromociones").checked;
   const acepto_terminos = document.getElementById("aceptoTerminos").checked;
 
-  let url = 'http://localhost:3000/suscriptores';
-  let method = 'POST';
-  if (suscriptorEditandoId) {
-    url += `/${suscriptorEditandoId}`;
-    method = 'PUT';
-  }
+  const url = suscriptorEditandoId
+    ? `http://localhost:3000/suscriptores/${suscriptorEditandoId}`
+    : `http://localhost:3000/suscriptores`;
+
+  const method = suscriptorEditandoId ? 'PUT' : 'POST';
 
   fetch(url, {
     method,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nombre, email, fecha_nacimiento, acepto_promociones, acepto_terminos })
   })
-  .then(res => {
-    if (!res.ok) throw new Error('Error al guardar el suscriptor');
-    return res.json();
-  })
-  .then(() => {
-    suscriptorForm.reset();
-    suscriptorEditandoId = null;
-    document.getElementById("suscriptorModal").style.display = "none";
-    cargarSuscriptores();
-  })
-  .catch(err => alert(err.message));
+    .then(res => {
+      if (!res.ok) throw new Error("Error al guardar el suscriptor");
+      return res.json();
+    })
+    .then(() => {
+      suscriptorForm.reset();
+      suscriptorEditandoId = null;
+      suscriptorModal.style.display = "none";
+      cargarSuscriptores();
+    })
+    .catch(err => alert(err.message));
 });
 
+// Cargar suscriptores y mostrar en tabla
 function cargarSuscriptores() {
-  fetch('http://localhost:3000/suscriptores')
+  fetch("http://localhost:3000/suscriptores")
     .then(res => res.json())
     .then(data => {
       const tbody = document.getElementById("suscriptoresTableBody");
       tbody.innerHTML = "";
+
       data.forEach(suscriptor => {
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${suscriptor.id}</td>
           <td>${suscriptor.nombre}</td>
           <td>${suscriptor.email}</td>
-          <td>${suscriptor.fecha_nacimiento}</td>
-          <td>${suscriptor.acepto_promociones ? "Sí" : "No"}</td>
-          <td>${suscriptor.acepto_terminos ? "Sí" : "No"}</td>
+          <td>${suscriptor.fecha_nacimiento || ''}</td>
+          <td>${suscriptor.acepto_promociones ? 'Sí' : 'No'}</td>
+          <td>${suscriptor.fecha_suscripcion || ''}</td>
           <td>
-            <button class="edit-btn" data-id="${suscriptor.id}" data-nombre="${suscriptor.nombre}" data-email="${suscriptor.email}" data-fecha="${suscriptor.fecha_nacimiento}" data-promociones="${suscriptor.acepto_promociones}" data-terminos="${suscriptor.acepto_terminos}">Editar</button>
+            <button class="edit-btn" data-id="${suscriptor.id}">Editar</button>
             <button class="delete-btn" data-id="${suscriptor.id}">Eliminar</button>
           </td>
         `;
         tbody.appendChild(row);
       });
 
-      // Botones Editar
-      document.querySelectorAll("#suscriptoresTableBody .edit-btn").forEach(btn => {
-        btn.onclick = (e) => {
-          const el = e.target;
-          suscriptorEditandoId = el.dataset.id;
-          document.getElementById("nombreSuscriptor").value = el.dataset.nombre;
-          document.getElementById("emailSuscriptor").value = el.dataset.email;
-          document.getElementById("fechaNacimiento").value = el.dataset.fecha;
-          document.getElementById("aceptoPromociones").checked = (el.dataset.promociones === "true");
-          document.getElementById("aceptoTerminos").checked = (el.dataset.terminos === "true");
-          document.getElementById("suscriptorModal").style.display = "block";
-        };
+      // Botones editar
+      document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.id;
+          fetch(`http://localhost:3000/suscriptores/${id}`)
+            .then(res => res.json())
+            .then(s => {
+              document.getElementById("nombreSuscriptor").value = s.nombre;
+              document.getElementById("emailSuscriptor").value = s.email;
+              document.getElementById("fechaNacimiento").value = s.fecha_nacimiento || '';
+              document.getElementById("aceptoPromociones").checked = s.acepto_promociones;
+              document.getElementById("aceptoTerminos").checked = s.acepto_terminos;
+
+              suscriptorEditandoId = s.id;
+              suscriptorModal.style.display = "block";
+            });
+        });
       });
 
-      // Botones Eliminar
-      document.querySelectorAll("#suscriptoresTableBody .delete-btn").forEach(btn => {
-        btn.onclick = (e) => {
-          const id = e.target.dataset.id;
-          if (confirm("¿Querés eliminar este suscriptor?")) {
-            fetch(`http://localhost:3000/suscriptores/${id}`, { method: 'DELETE' })
+      // Botones eliminar
+      document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.id;
+          if (confirm("¿Seguro que querés eliminar este suscriptor?")) {
+            fetch(`http://localhost:3000/suscriptores/${id}`, {
+              method: "DELETE",
+            })
               .then(res => {
-                if (!res.ok) throw new Error('Error al eliminar el suscriptor');
+                if (!res.ok) throw new Error("Error al eliminar");
                 cargarSuscriptores();
               })
               .catch(err => alert(err.message));
           }
-        };
+        });
       });
     });
 }
 
-// Cargar suscriptores al iniciar
-document.addEventListener("DOMContentLoaded", cargarSuscriptores);
+// Cargar al iniciar
+document.addEventListener("DOMContentLoaded", () => {
+  cargarSuscriptores();
+});
+
+
 
 
 // Cargar intereses desde la API y mostrarlos en la tabla
