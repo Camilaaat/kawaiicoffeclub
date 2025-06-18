@@ -558,54 +558,47 @@ btnAddContacto?.addEventListener("click", () => {
   contactoModal.style.display = "block";
 });
 
-// Cerrar modal con la "x"
-contactoModal.querySelector(".close-btn").addEventListener("click", () => {
+// Cerrar modal
+contactoModal.querySelector(".close-btn")?.addEventListener("click", () => {
   contactoModal.style.display = "none";
 });
 
-// Submit para agregar o editar contacto
+// Guardar contacto (crear o editar)
 contactoForm?.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const nombre = document.getElementById("nombreContacto").value.trim();
   const email = document.getElementById("emailContacto").value.trim();
-  const telefono = document.getElementById("telefonoContacto").value.trim();
-  const asunto = document.getElementById("asuntoContacto").value;
-    const fecha = document.getElementById("fechaContacto").value;
+  const asunto = document.getElementById("asuntoContacto").value.trim();
+  const mensaje = document.getElementById("mensajeContacto").value.trim();
 
-  if (!nombre || !email) {
-    alert("El nombre y el email son obligatorios");
-    return;
-  }
+  const url = contactoEditandoId
+    ? `http://localhost:3000/contactos/${contactoEditandoId}`
+    : `http://localhost:3000/contactos`;
 
-  let url = 'http://localhost:3000/contactos';
-  let method = 'POST';
-  if (contactoEditandoId) {
-    url += `/${contactoEditandoId}`;
-    method = 'PUT';
-  }
+  const method = contactoEditandoId ? "PUT" : "POST";
 
- fetch(url, {
-  method,
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ nombre, email, telefono, asunto, fecha })
-})
-  .then(res => {
-    if (!res.ok) throw new Error("Error al guardar el contacto");
-    return res.json();
+  fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nombre, email, asunto, mensaje })
   })
-  .then(() => {
-    contactoForm.reset();
-    contactoEditandoId = null;
-    contactoModal.style.display = "none";
-    cargarContactos();
-  })
-  .catch(err => alert(err.message));
+    .then(res => {
+      if (!res.ok) throw new Error("Error al guardar el contacto");
+      return res.json();
+    })
+    .then(() => {
+      contactoForm.reset();
+      contactoModal.style.display = "none";
+      contactoEditandoId = null;
+      cargarContactos();
+    })
+    .catch(err => alert(err.message));
 });
 
-// Función para cargar contactos y mostrarlos en la tabla
+// Cargar contactos y mostrar en tabla
 function cargarContactos() {
-  fetch('http://localhost:3000/contactos')
+  fetch("http://localhost:3000/contactos")
     .then(res => res.json())
     .then(data => {
       const tbody = document.getElementById("contactosTableBody");
@@ -617,59 +610,59 @@ function cargarContactos() {
           <td>${contacto.id}</td>
           <td>${contacto.nombre}</td>
           <td>${contacto.email}</td>
-          <td>${contacto.telefono || ''}</td>
-          <td>${contacto.asunto || ''}</td>
-        <td>${contacto.fecha || ''}</td>
+          <td>${contacto.asunto || ""}</td>
+          <td>${contacto.mensaje}</td>
+          <td>${contacto.fecha_contacto || ""}</td>
           <td>
-            <button class="edit-btn" 
-              data-id="${contacto.id}" 
-              data-nombre="${contacto.nombre}" 
-              data-email="${contacto.email}" 
-              data-telefono="${contacto.telefono || ''}"
-              data-asunto="${contacto.asunto || ''}"
-      data-fecha="${contacto.fecha || ''}">>
-              Editar
-            </button>
+            <button class="edit-btn" data-id="${contacto.id}">Editar</button>
             <button class="delete-btn" data-id="${contacto.id}">Eliminar</button>
           </td>
         `;
         tbody.appendChild(row);
       });
 
-      // Botones Editar
-      document.querySelectorAll("#contactosTableBody .edit-btn").forEach(btn => {
-        btn.onclick = (e) => {
-          const el = e.target;
-          contactoEditandoId = el.dataset.id;
-          document.getElementById("nombreContacto").value = el.dataset.nombre;
-          document.getElementById("emailContacto").value = el.dataset.email;
-          document.getElementById("telefonoContacto").value = el.dataset.telefono;
-        document.getElementById("asuntoContacto").value = el.dataset.asunto || "";
-        document.getElementById("fechaContacto").value = el.dataset.fecha || "";
+      // Botones editar
+      document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.id;
+          fetch(`http://localhost:3000/contactos/${id}`)
+            .then(res => res.json())
+            .then(c => {
+              document.getElementById("nombreContacto").value = c.nombre;
+              document.getElementById("emailContacto").value = c.email;
+              document.getElementById("asuntoContacto").value = c.asunto || "";
+              document.getElementById("mensajeContacto").value = c.mensaje;
 
-          contactoModal.style.display = "block";
-        };
+              contactoEditandoId = c.id;
+              contactoModal.style.display = "block";
+            });
+        });
       });
 
-      // Botones Eliminar
-      document.querySelectorAll("#contactosTableBody .delete-btn").forEach(btn => {
-        btn.onclick = (e) => {
-          const id = e.target.dataset.id;
-          if (confirm("¿Querés eliminar este contacto?")) {
-            fetch(`http://localhost:3000/contactos/${id}`, { method: 'DELETE' })
+      // Botones eliminar
+      document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.id;
+          if (confirm("¿Seguro que querés eliminar este contacto?")) {
+            fetch(`http://localhost:3000/contactos/${id}`, {
+              method: "DELETE"
+            })
               .then(res => {
-                if (!res.ok) throw new Error("Error al eliminar el contacto");
+                if (!res.ok) throw new Error("Error al eliminar");
                 cargarContactos();
               })
               .catch(err => alert(err.message));
           }
-        };
+        });
       });
     });
 }
 
-// Cargar contactos al cargar la página
-document.addEventListener("DOMContentLoaded", cargarContactos);
+// Cargar al iniciar
+document.addEventListener("DOMContentLoaded", () => {
+  cargarContactos();
+});
+
 
 
 
