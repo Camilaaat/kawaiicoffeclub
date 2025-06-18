@@ -17,7 +17,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
 
     localStorage.setItem('token', data.token);
     alert(`Bienvenido, ${data.nombre}`);
-window.location.href = "pages/admin.html";
+window.location.href = "/pages/admin/admin.html";
   } catch (err) {
     alert(err.message);
   }
