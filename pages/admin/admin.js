@@ -67,57 +67,88 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- FORMULARIOS ---
 
-  // Formulario Tareas
-  const tareaForm = document.getElementById("tareaForm");
-  tareaForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const tarea = document.getElementById("tarea").value;
+// Formulario TAREAS
+const tareaForm = document.getElementById("tareaForm");
+let tareaEditandoId = null; // para saber si estamos editando
 
-    fetch('http://localhost:3000/tareas', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tarea })
-    })
-    .then(res => {
-      if (!res.ok) throw new Error('Error al guardar la tarea');
-      return res.json();
-    })
-    .then(() => {
-      tareaForm.reset();
-      document.getElementById("tareaModal").style.display = "none";
-      cargarTareas();
-    })
-    .catch(err => alert(err.message));
-  });
-
-  // Formulario Suscriptores
-const suscriptorForm = document.getElementById("suscriptorForm");
-
-suscriptorForm?.addEventListener("submit", (e) => {
+tareaForm?.addEventListener("submit", (e) => {
   e.preventDefault();
+  const tarea = document.getElementById("tarea").value;
 
-  const nombre = document.getElementById("nombreSuscriptor").value.trim();
-  const email = document.getElementById("emailSuscriptor").value.trim();
-  const fecha_nacimiento = document.getElementById("fechaNacimiento").value;
-  const acepto_promociones = document.getElementById("aceptoPromociones").checked;
-  const acepto_terminos = document.getElementById("aceptoTerminos").checked;
+  let url = 'http://localhost:3000/tareas';
+  let method = 'POST';
+  if (tareaEditandoId) {
+    url += `/${tareaEditandoId}`;
+    method = 'PUT';
+  }
 
-  fetch('http://localhost:3000/suscriptores', {
-    method: 'POST',
+  fetch(url, {
+    method,
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nombre, email, fecha_nacimiento, acepto_promociones, acepto_terminos })
+    body: JSON.stringify({ tarea })
   })
   .then(res => {
-    if (!res.ok) throw new Error('Error al guardar el suscriptor');
+    if (!res.ok) throw new Error('Error al guardar la tarea');
     return res.json();
   })
   .then(() => {
-    suscriptorForm.reset();
-    document.getElementById("suscriptorModal").style.display = "none";
-    cargarSuscriptores();
+    tareaForm.reset();
+    tareaEditandoId = null;
+    document.getElementById("tareaModal").style.display = "none";
+    cargarTareas();
   })
   .catch(err => alert(err.message));
 });
+
+function cargarTareas() {
+  fetch('http://localhost:3000/tareas')
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.getElementById("tareasTableBody");
+      tbody.innerHTML = "";
+      data.forEach(tarea => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${tarea.id}</td>
+          <td>${tarea.tarea}</td>
+          <td>
+            <button class="edit-btn" data-id="${tarea.id}" data-tarea="${tarea.tarea}">Editar</button>
+            <button class="delete-btn" data-id="${tarea.id}">Eliminar</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      // Botones Editar
+      document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.onclick = (e) => {
+          const id = e.target.dataset.id;
+          const tareaTexto = e.target.dataset.tarea;
+          document.getElementById("tarea").value = tareaTexto;
+          tareaEditandoId = id;
+          document.getElementById("tareaModal").style.display = "block";
+        };
+      });
+
+      // Botones Eliminar
+      document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.onclick = (e) => {
+          const id = e.target.dataset.id;
+          if (confirm("¿Querés eliminar esta tarea?")) {
+            fetch(`http://localhost:3000/tareas/${id}`, { method: 'DELETE' })
+              .then(res => {
+                if (!res.ok) throw new Error('Error al eliminar la tarea');
+                cargarTareas();
+              })
+              .catch(err => alert(err.message));
+          }
+        };
+      });
+    });
+}
+
+// Cargar tareas al iniciar
+document.addEventListener("DOMContentLoaded", cargarTareas);
 
 
   // Formulario Intereses
@@ -248,6 +279,45 @@ function cargarTareas() {
     });
 }
 
+//FORMULARIO SUSCRIPTORES
+// Formulario Suscriptores
+const suscriptorForm = document.getElementById("suscriptorForm");
+let suscriptorEditandoId = null;
+
+suscriptorForm?.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const nombre = document.getElementById("nombreSuscriptor").value.trim();
+  const email = document.getElementById("emailSuscriptor").value.trim();
+  const fecha_nacimiento = document.getElementById("fechaNacimiento").value;
+  const acepto_promociones = document.getElementById("aceptoPromociones").checked;
+  const acepto_terminos = document.getElementById("aceptoTerminos").checked;
+
+  let url = 'http://localhost:3000/suscriptores';
+  let method = 'POST';
+  if (suscriptorEditandoId) {
+    url += `/${suscriptorEditandoId}`;
+    method = 'PUT';
+  }
+
+  fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nombre, email, fecha_nacimiento, acepto_promociones, acepto_terminos })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Error al guardar el suscriptor');
+    return res.json();
+  })
+  .then(() => {
+    suscriptorForm.reset();
+    suscriptorEditandoId = null;
+    document.getElementById("suscriptorModal").style.display = "none";
+    cargarSuscriptores();
+  })
+  .catch(err => alert(err.message));
+});
+
 function cargarSuscriptores() {
   fetch('http://localhost:3000/suscriptores')
     .then(res => res.json())
@@ -261,19 +331,55 @@ function cargarSuscriptores() {
           <td>${suscriptor.nombre}</td>
           <td>${suscriptor.email}</td>
           <td>${suscriptor.fecha_nacimiento}</td>
-          <td>${suscriptor.acepta_promociones ? 'Sí' : 'No'}</td>
-          <td>${suscriptor.fecha_suscripcion}</td>
+          <td>${suscriptor.acepto_promociones ? "Sí" : "No"}</td>
+          <td>${suscriptor.acepto_terminos ? "Sí" : "No"}</td>
           <td>
-            <button class="edit-btn" data-id="${suscriptor.id}">Editar</button>
+            <button class="edit-btn" data-id="${suscriptor.id}" data-nombre="${suscriptor.nombre}" data-email="${suscriptor.email}" data-fecha="${suscriptor.fecha_nacimiento}" data-promociones="${suscriptor.acepto_promociones}" data-terminos="${suscriptor.acepto_terminos}">Editar</button>
             <button class="delete-btn" data-id="${suscriptor.id}">Eliminar</button>
           </td>
         `;
         tbody.appendChild(row);
       });
+
+      // Botones Editar
+      document.querySelectorAll("#suscriptoresTableBody .edit-btn").forEach(btn => {
+        btn.onclick = (e) => {
+          const el = e.target;
+          suscriptorEditandoId = el.dataset.id;
+          document.getElementById("nombreSuscriptor").value = el.dataset.nombre;
+          document.getElementById("emailSuscriptor").value = el.dataset.email;
+          document.getElementById("fechaNacimiento").value = el.dataset.fecha;
+          document.getElementById("aceptoPromociones").checked = (el.dataset.promociones === "true");
+          document.getElementById("aceptoTerminos").checked = (el.dataset.terminos === "true");
+          document.getElementById("suscriptorModal").style.display = "block";
+        };
+      });
+
+      // Botones Eliminar
+      document.querySelectorAll("#suscriptoresTableBody .delete-btn").forEach(btn => {
+        btn.onclick = (e) => {
+          const id = e.target.dataset.id;
+          if (confirm("¿Querés eliminar este suscriptor?")) {
+            fetch(`http://localhost:3000/suscriptores/${id}`, { method: 'DELETE' })
+              .then(res => {
+                if (!res.ok) throw new Error('Error al eliminar el suscriptor');
+                cargarSuscriptores();
+              })
+              .catch(err => alert(err.message));
+          }
+        };
+      });
     });
 }
 
+// Cargar suscriptores al iniciar
+document.addEventListener("DOMContentLoaded", cargarSuscriptores);
+
+
 // Cargar intereses desde la API y mostrarlos en la tabla
+let interesEditandoId = null;
+
+// Función para cargar intereses en la tabla
 function cargarIntereses() {
   fetch('http://localhost:3000/intereses')
     .then(res => res.json())
@@ -287,11 +393,44 @@ function cargarIntereses() {
           <td>${interes.nombre_suscriptor}</td>
           <td>${interes.interes}</td>
           <td>
-            <button class="edit-btn" data-id="${interes.id}">Editar</button>
+            <button class="edit-btn" 
+              data-id="${interes.id}"
+              data-suscriptor_id="${interes.suscriptor_id}"
+              data-interes="${interes.interes}"
+            >Editar</button>
             <button class="delete-btn" data-id="${interes.id}">Eliminar</button>
           </td>
         `;
         tbody.appendChild(row);
+      });
+
+      // Botones Editar
+      document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.onclick = (e) => {
+          const el = e.target;
+          interesEditandoId = el.dataset.id;
+
+          // Cargar datos en formulario
+          document.getElementById("suscriptorIdInteres").value = el.dataset.suscriptor_id;
+          document.getElementById("interes").value = el.dataset.interes;
+
+          document.getElementById("interesModal").style.display = "block";
+        };
+      });
+
+      // Botones Eliminar
+      document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.onclick = (e) => {
+          const id = e.target.dataset.id;
+          if (confirm("¿Querés eliminar este interés?")) {
+            fetch(`http://localhost:3000/intereses/${id}`, { method: 'DELETE' })
+              .then(res => {
+                if (!res.ok) throw new Error('Error al eliminar el interés');
+                cargarIntereses();
+              })
+              .catch(err => alert(err.message));
+          }
+        };
       });
     });
 }
@@ -312,16 +451,25 @@ function cargarSuscriptoresParaIntereses() {
     });
 }
 
-// Evento submit para agregar un interés
+// Evento submit para agregar o editar un interés
 const interesForm = document.getElementById("interesForm");
 interesForm?.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const suscriptor_id = document.getElementById("suscriptorIdInteres").value;
-  const interes = document.getElementById("interes").value;
+  const interes = document.getElementById("interes").value.trim();
 
-  fetch('http://localhost:3000/intereses', {
-    method: 'POST',
+  if (!interes) return alert("El interés no puede estar vacío");
+
+  let url = 'http://localhost:3000/intereses';
+  let method = 'POST';
+  if (interesEditandoId) {
+    url += `/${interesEditandoId}`;
+    method = 'PUT';
+  }
+
+  fetch(url, {
+    method,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ suscriptor_id, interes })
   })
@@ -331,87 +479,146 @@ interesForm?.addEventListener("submit", (e) => {
   })
   .then(() => {
     interesForm.reset();
+    interesEditandoId = null;
     document.getElementById("interesModal").style.display = "none";
     cargarIntereses();
   })
   .catch(err => alert(err.message));
 });
 
-// Al cargar la página o script, cargar opciones y tabla
+// Inicialización al cargar la página
 document.addEventListener("DOMContentLoaded", () => {
   cargarSuscriptoresParaIntereses();
   cargarIntereses();
 });
 
 
-// Cargar contactos desde la API y mostrar en la tabla
-const contactoForm = document.getElementById("contactoForm");
+//FORMULARIO CONTACTOS
+let contactoEditandoId = null;
 
+const contactoForm = document.getElementById("contactoForm");
+const contactoModal = document.getElementById("contactoModal");
+const btnAddContacto = document.getElementById("addContactoBtn");
+
+// Abrir modal para agregar contacto nuevo
+btnAddContacto?.addEventListener("click", () => {
+  contactoForm.reset();
+  contactoEditandoId = null;
+  contactoModal.style.display = "block";
+});
+
+// Cerrar modal con la "x"
+contactoModal.querySelector(".close-btn").addEventListener("click", () => {
+  contactoModal.style.display = "none";
+});
+
+// Submit para agregar o editar contacto
 contactoForm?.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const nombre = document.getElementById("nombreContacto").value;
-  const email = document.getElementById("emailContacto").value;
-  const telefono = document.getElementById("telefonoContacto").value;
+  const nombre = document.getElementById("nombreContacto").value.trim();
+  const email = document.getElementById("emailContacto").value.trim();
+  const telefono = document.getElementById("telefonoContacto").value.trim();
   const asunto = document.getElementById("asuntoContacto").value;
-  const mensaje = document.getElementById("mensajeContacto").value;
-  const preferencia_contacto = document.getElementById("preferenciaContacto").value;
-  const acepto_promociones = document.getElementById("aceptoPromocionesContacto").checked;
+    const fecha = document.getElementById("fechaContacto").value;
 
-  fetch('http://localhost:3000/contactos', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      nombre,
-      email,
-      telefono,
-      asunto,
-      mensaje,
-      preferencia_contacto,
-      acepto_promociones
-      // Fecha idealmente la genera el backend, si querés podés agregar un campo para enviar
-    })
-  })
+  if (!nombre || !email) {
+    alert("El nombre y el email son obligatorios");
+    return;
+  }
+
+  let url = 'http://localhost:3000/contactos';
+  let method = 'POST';
+  if (contactoEditandoId) {
+    url += `/${contactoEditandoId}`;
+    method = 'PUT';
+  }
+
+ fetch(url, {
+  method,
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ nombre, email, telefono, asunto, fecha })
+})
   .then(res => {
-    if (!res.ok) throw new Error('Error al guardar el contacto');
+    if (!res.ok) throw new Error("Error al guardar el contacto");
     return res.json();
   })
   .then(() => {
     contactoForm.reset();
-    document.getElementById("contactoModal").style.display = "none";
+    contactoEditandoId = null;
+    contactoModal.style.display = "none";
     cargarContactos();
   })
   .catch(err => alert(err.message));
 });
 
+// Función para cargar contactos y mostrarlos en la tabla
 function cargarContactos() {
   fetch('http://localhost:3000/contactos')
     .then(res => res.json())
     .then(data => {
       const tbody = document.getElementById("contactosTableBody");
       tbody.innerHTML = "";
+
       data.forEach(contacto => {
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${contacto.id}</td>
           <td>${contacto.nombre}</td>
           <td>${contacto.email}</td>
-          <td>${contacto.telefono}</td>
-          <td>${contacto.asunto}</td>
-          <td>${contacto.fecha ? new Date(contacto.fecha).toLocaleDateString() : ''}</td>
+          <td>${contacto.telefono || ''}</td>
+          <td>${contacto.asunto || ''}</td>
+        <td>${contacto.fecha || ''}</td>
           <td>
-            <button class="edit-btn" data-id="${contacto.id}">Editar</button>
+            <button class="edit-btn" 
+              data-id="${contacto.id}" 
+              data-nombre="${contacto.nombre}" 
+              data-email="${contacto.email}" 
+              data-telefono="${contacto.telefono || ''}"
+              data-asunto="${contacto.asunto || ''}"
+      data-fecha="${contacto.fecha || ''}">>
+              Editar
+            </button>
             <button class="delete-btn" data-id="${contacto.id}">Eliminar</button>
           </td>
         `;
         tbody.appendChild(row);
       });
+
+      // Botones Editar
+      document.querySelectorAll("#contactosTableBody .edit-btn").forEach(btn => {
+        btn.onclick = (e) => {
+          const el = e.target;
+          contactoEditandoId = el.dataset.id;
+          document.getElementById("nombreContacto").value = el.dataset.nombre;
+          document.getElementById("emailContacto").value = el.dataset.email;
+          document.getElementById("telefonoContacto").value = el.dataset.telefono;
+        document.getElementById("asuntoContacto").value = el.dataset.asunto || "";
+        document.getElementById("fechaContacto").value = el.dataset.fecha || "";
+
+          contactoModal.style.display = "block";
+        };
+      });
+
+      // Botones Eliminar
+      document.querySelectorAll("#contactosTableBody .delete-btn").forEach(btn => {
+        btn.onclick = (e) => {
+          const id = e.target.dataset.id;
+          if (confirm("¿Querés eliminar este contacto?")) {
+            fetch(`http://localhost:3000/contactos/${id}`, { method: 'DELETE' })
+              .then(res => {
+                if (!res.ok) throw new Error("Error al eliminar el contacto");
+                cargarContactos();
+              })
+              .catch(err => alert(err.message));
+          }
+        };
+      });
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  cargarContactos();
-});
+// Cargar contactos al cargar la página
+document.addEventListener("DOMContentLoaded", cargarContactos);
 
 
 
