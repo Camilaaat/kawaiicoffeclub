@@ -1,6 +1,3 @@
-// CONFIGURAR LO QUE SERIA UN SERVIDOR CON LAS MINIMAS PRESTACIONES PARA CORRER EXPRESS
-// Que este escuchando y tengamos una ruta principal "/" en el proyecto
-
 require("dotenv").config();
 
 const cors = require("cors");
@@ -13,9 +10,6 @@ app.use(cors());
 app.use('/img_clientes', express.static('img_clientes'));
 app.use('/pages', express.static('pages'));
 
-
-// en el cuerpo de la petición viene un json, lo voy a transformar en un objeto JS y de esta manera
-// lo voy a poder utilizar
 
 const tareasRouter = require('./routers/tareas.router');
 app.use('/tareas', tareasRouter);
