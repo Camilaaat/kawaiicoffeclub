@@ -57,15 +57,39 @@
         <h2>¿Quieres aparecer aquí? 📷</h2> <br>
         <p>¡Envíanos una foto tuya disfrutando en Kawaii Coffee Club y podrías aparecer en nuestra galería de clientes felices!</p> <br>
         <h2>Envía tu Foto 📷</h2>
-    <form id="envio-foto" action="tu_script_de_subida.php" method="POST" enctype="multipart/form-data">
-    <label for="nombre">Tu Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required>
+    <form id="envio-foto" enctype="multipart/form-data">
+  <label for="nombre">Tu Nombre:</label>
+  <input type="text" id="nombre" name="nombre" required>
 
-    <label for="foto">Selecciona una foto:</label>
-    <input type="file" id="foto" name="foto" accept="image/*" required>
+  <label for="foto">Selecciona una foto:</label>
+  <input type="file" id="foto" name="ruta_imagen" accept="image/*" required>
 
-    <button type="submit">Enviar Foto</button>
+  <button type="submit">Enviar Foto</button>
 </form>
+<script>
+  document.getElementById("envio-foto").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    fetch("http://localhost:3000/fotosclientes", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Error al subir la foto");
+      return res.json();
+    })
+    .then(data => {
+      alert("¡Foto subida con éxito!");
+      form.reset();
+      location.reload(); // recarga para que aparezca la nueva foto
+    })
+    .catch(err => alert("Hubo un error: " + err.message));
+  });
+</script>
+
         <h4>¡Gracias a todos nuestros clientes por hacer de Kawaii Coffee Club un lugar lleno de sonrisas y momentos especiales!</h4>
     </section>
 
@@ -77,5 +101,26 @@
         <p>&copy; 2024 Kawaii Coffee Club</p>
     </footer>
     <script src="/js/navbar.js" defer></script>
+    <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    fetch('http://localhost:3000/fotosclientes')
+      .then(res => res.json())
+      .then(data => {
+        const grid = document.querySelector(".grid-container");
+        grid.innerHTML = ""; // Limpiar las imágenes fijas
+
+        data.forEach(foto => {
+          const div = document.createElement("div");
+          div.classList.add("grid-item");
+          div.innerHTML = `
+            <img src="${foto.ruta_imagen}" alt="${foto.nombre}">
+          `;
+          grid.appendChild(div);
+        });
+      })
+      .catch(err => console.error("Error al cargar fotos:", err));
+  });
+</script>
+
 </body>
 </html>
